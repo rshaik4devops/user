@@ -1,0 +1,53 @@
+---
+  - name: Install and configure User application
+    hosts: user
+    become: yes
+    vars:
+      user: roboshop
+    tasks:
+      - name: Install packages
+        yum:
+          name: "{{ item }}"
+          state: latest
+          loop:
+            - nodejs 
+            - make 
+            - gcc-c++
+      - name: creaing  {{ user }} user
+        user:
+          name: "{{ user }}"
+          state: present
+      - name: download application content from git
+        get_url:
+          url: https://github.com/rshaik4devops/user/archive/main.zip
+          dest: /tmp/user.zip
+      - name: unarchive application content
+        unarchive:
+           src:  /tmp/user.zip
+           dest: /home/roboshop
+           remote_src: true 
+      - name: rename user-main
+        comamnd: mv user-main user
+        args:
+          chdir: /home/roboshop
+      - name: install user application
+        command: npm install 
+        args:
+         chdir: /home/roboshop/user
+      - name: copy systemd file for user service
+        copy:
+          src: /home/roboshop/user/systemd.service
+          dest: /etc/systemd/system/user.service
+          remote_src: true
+      - name: enable the service 
+        systemd:
+           name: user
+           enabled: true
+      - name: start the service
+        systemd: 
+          name: user
+          state: started
+          
+
+
+
