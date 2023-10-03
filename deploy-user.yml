@@ -7,9 +7,9 @@
     tasks:
       - name: Install packages
         yum:
-          name: "{{ items }}"
+          name: "{{ item }}"
           state: latest
-          loop:
+        loop:
             - nodejs 
             - make 
             - gcc-c++
