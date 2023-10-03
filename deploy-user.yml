@@ -27,7 +27,7 @@
            dest: /home/roboshop
            remote_src: true 
       - name: rename user-main
-        comamnd: mv user-main user
+        command: mv user-main user
         args:
           chdir: /home/roboshop
       - name: install user application
@@ -47,7 +47,7 @@
         systemd: 
           name: user
           state: started
-          
+
 
 
 
